@@ -171,5 +171,21 @@ export default {
     tagsView: 'Open Tags-View',
     fixedHeader: 'Fixed Header',
     sidebarLogo: 'Sidebar Logo'
+  },
+  userInfo:{
+    uid: 'UID',
+    username: 'Username',
+    type: 'Type',
+    email: 'E-mail',
+    statue: 'Status',
+    createTime: 'CreateTime',
+    updateTime: 'UpdateTime',
+    search: 'Search',
+    add: 'Add',
+    actions: 'Actions',
+    edit: 'Edit',
+    delete: 'Delete',
+    cancel: 'Cancel',
+    confirm: 'Confirm'
   }
 }

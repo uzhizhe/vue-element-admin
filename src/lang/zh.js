@@ -173,5 +173,22 @@ export default {
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
+  },
+  userInfo:{
+    uid: 'UID',
+    username: '用户名',
+    type: '用户类型',
+    email: '邮箱',
+    status: '状态',
+    createTime: '创建时间',
+    updateTime: '更新时间',
+    operation: '操作',
+    search: '搜索',
+    add: '新增',
+    actions: '操作',
+    edit: '编辑',
+    delete: '删除',
+    cancel: '取 消',
+    confirm: '确 定',
   }
 }
