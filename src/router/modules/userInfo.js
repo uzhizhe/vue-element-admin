@@ -5,7 +5,7 @@ import Layout from '@/layout'
 const userRouter = {
   path: '/user',
   component: Layout,
-  redirect: '/user/user/infomation',
+  redirect: '/user/infomatio/infomation1',
   name: 'UserInfo',
   meta: {
     title: '用户',
@@ -14,20 +14,20 @@ const userRouter = {
   children: [
     {
       path: 'infomation',
-      component: () => import('@/views/user/infomation/infomation1'),
+      component: () => import('@/views/user/infomation'),
       name: '用户信息',
-      redirect: '/user/infomation',
+      redirect: '/user/infomation/infomation1',
       meta: { title: '用户信息' },
       children: [
         {
           path: 'infomation1',
-          component: () => import('@/views/user/infomation/infomation1'),
+          component: () => import('@/views/user/infomation/infomation1/index.vue'),
           name: '用户信息1',
           meta: { title: '用户信息1' }
         },
         {
           path: 'infomation2',
-          component: () => import('@/views/user/infomation/infomation2'),
+          component: () => import('@/views/user/infomation/infomation2/index.vue'),
           name: '用户信息2',
           meta: { title: '用户信息2' }
         }
@@ -77,5 +77,4 @@ const userRouter = {
     }
   ]
 }
-
 export default userRouter

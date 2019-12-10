@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.title"
+        v-model="listQuery.name"
         :placeholder="$t('userInfo.username')"
         style="width: 200px;"
         class="filter-item"
@@ -41,37 +41,37 @@
           <span>{{ scope.row.uid }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.username')" width="120px" align="center">
+      <el-table-column :label="$t('userInfo.username')" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.username }}</span>
+          <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.type')" width="110px" align="center">
+      <el-table-column :label="$t('userInfo.type')" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.email')" width="210px" align="center">
+      <el-table-column :label="$t('userInfo.email')" width="200px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.status')" width="110px" align="center">
+      <el-table-column :label="$t('userInfo.status')" width="100px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.createTime')" width="180px" align="center">
+      <el-table-column :label="$t('userInfo.createTime')" width="170px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.updateTime')" width="180px" align="center">
+      <el-table-column :label="$t('userInfo.updateTime')" width="170px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.actions')" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('userInfo.actions')" align="center" width="220" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('userInfo.edit') }}
@@ -84,6 +84,8 @@
     </el-table>
 
     <pagination
+      class="yangshi"
+      align="center"
       v-show="total>0"
       :total="total"
       :page.sync="listQuery.page"
@@ -114,7 +116,7 @@ export default {
         page: 1,
         limit: 10,
         importance: undefined,
-        title: undefined,
+        name: undefined,
         type: undefined,
         sort: '+id'
       },
@@ -128,7 +130,7 @@ export default {
         importance: 1,
         remark: '',
         timestamp: new Date(),
-        title: '',
+        name: '',
         type: '',
         status: 'published'
       },
@@ -143,7 +145,7 @@ export default {
       rules: {
         type: [{ required: true, message: 'type is required', trigger: 'change' }],
         timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        name: [{ required: true, message: 'name is required', trigger: 'blur' }]
       },
       downloadLoading: false
     }
@@ -165,14 +167,12 @@ export default {
       })
     },
     handleFilter() {
-      this.demoMethod()
-      return
       this.listQuery.page = 1
       this.getList()
     },
     handleModifyStatus(row, status) {
       this.demoMethod()
-      return;
+      return
       this.$message({
         message: '操作成功1',
         type: 'success'
@@ -201,7 +201,7 @@ export default {
         importance: 1,
         remark: '',
         timestamp: new Date(),
-        title: '',
+        name: '',
         status: 'published',
         type: ''
       }
@@ -320,3 +320,19 @@ export default {
   }
 }
 </script>
+<style lang="css">
+  /*/deep/ .pagination-container {*/
+  /*  margin-top: 0px;*/
+  /*}*/
+  .yangshi {
+    margin-top: 0px;
+  }
+
+</style>
+
+<!--<styel scoped lang="stylus" rel="stylesheet/stylus">-->
+<!--  /deep/ .pagination-container-->
+<!--    margin-top 0px-->
+<!--  .yangshi-->
+<!--    margin: 0px-->
+<!--</styel>-->
