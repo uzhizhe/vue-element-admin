@@ -177,8 +177,10 @@ export default {
   userInfo:{
     uid: 'UID',
     username: '用户名',
+    password: '密码',
     type: '用户类型',
     email: '邮箱',
+    phone: "手机号",
     status: '状态',
     createTime: '创建时间',
     updateTime: '更新时间',

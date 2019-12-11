@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-export function fetchUserInfoList(data) {
+export function fetchUserInfoList(query) {
   return request({
     url: 'http://localhost:8002/uzhizhe/user/users',
-    method: 'post',
-    data
+    method: 'get',
+    params: query
   })
 }
 
@@ -24,9 +24,10 @@ export function fetchPv(pv) {
   })
 }
 
-export function createArticle(data) {
+export function createUserInfo(data) {
+  console.log("Create User Info ", data)
   return request({
-    url: '/article/create',
+    url: 'http://localhost:8002/uzhizhe/user/users',
     method: 'post',
     data
   })

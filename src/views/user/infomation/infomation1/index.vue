@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.name"
+        v-model="listQuery.username"
         :placeholder="$t('userInfo.username')"
         style="width: 200px;"
         class="filter-item"
@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column :label="$t('userInfo.username')" width="110px" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('userInfo.type')" width="100px" align="center">
@@ -51,7 +51,7 @@
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.email')" width="200px" align="center">
+      <el-table-column :label="$t('userInfo.email')" width="250px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
@@ -61,17 +61,17 @@
           <span>{{ scope.row.status }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.createTime')" width="170px" align="center">
+      <el-table-column :label="$t('userInfo.createTime')" width="180px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.updateTime')" width="170px" align="center">
+      <el-table-column :label="$t('userInfo.updateTime')" width="180px" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('userInfo.actions')" align="center" width="220" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('userInfo.actions')" align="center" width="260" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
             {{ $t('userInfo.edit') }}
@@ -84,7 +84,7 @@
     </el-table>
 
     <pagination
-      class="yangshi"
+      class="paginationStyle"
       align="center"
       v-show="total>0"
       :total="total"
@@ -92,12 +92,39 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"/>
 
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+        <el-form-item v-if="addShow" :label="$t('userInfo.uid')" prop="uid">
+          <el-input v-model="temp.uid" />
+        </el-form-item>
+        <el-form-item :label="$t('userInfo.username')" prop="username">
+          <el-input v-model="temp.username" />
+        </el-form-item>
+        <el-form-item :label="$t('userInfo.password')" prop="password">
+          <el-input v-model="temp.password" />
+        </el-form-item>
+        <el-form-item :label="$t('userInfo.email')" prop="email">
+          <el-input v-model="temp.email" />
+        </el-form-item>
+        <el-form-item :label="$t('userInfo.phone')" prop="phone">
+          <el-input v-model="temp.phone" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">
+          {{ $t('userInfo.cancel') }}
+        </el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+          {{ $t('userInfo.confirm') }}
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 // import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
-import { fetchUserInfoList, fetchPv, createArticle, updateArticle } from '@/api/user-info'
+import { fetchUserInfoList, fetchPv, createUserInfo, updateArticle } from '@/api/user-info'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -115,9 +142,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        importance: undefined,
-        name: undefined,
-        type: undefined,
+        username: undefined,
         sort: '+id'
       },
       importanceOptions: [1, 2, 3],
@@ -125,14 +150,13 @@ export default {
       sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: true,
+      addShow: false,
       temp: {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        name: '',
-        type: '',
-        status: 'published'
+        uid: undefined,
+        username: '',
+        password: '',
+        email: '',
+        phone: ''
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -157,13 +181,13 @@ export default {
     getList() {
       this.listLoading = true
       fetchUserInfoList(this.listQuery).then(response => {
-        console.log(response)
+        console.log('UserInfo:', response)
         this.list = response.data
         this.total = response.totalNumber
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
-        }, 1.5 * 1000)
+        }, 0.5 * 1000)
       })
     },
     handleFilter() {
@@ -171,8 +195,6 @@ export default {
       this.getList()
     },
     handleModifyStatus(row, status) {
-      this.demoMethod()
-      return
       this.$message({
         message: '操作成功1',
         type: 'success'
@@ -180,8 +202,6 @@ export default {
       row.status = status
     },
     sortChange(data) {
-      this.demoMethod()
-      return;
       const { prop, order } = data
       if (prop === 'id') {
         this.sortByID(order)
@@ -197,18 +217,14 @@ export default {
     },
     resetTemp() {
       this.temp = {
-        id: undefined,
-        importance: 1,
-        remark: '',
-        timestamp: new Date(),
-        name: '',
-        status: 'published',
-        type: ''
+        uid: undefined,
+        username: '',
+        password: '',
+        email: '',
+        phone: ''
       }
     },
     handleCreate() {
-      this.demoMethod()
-      return;
       this.resetTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -219,10 +235,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
-          createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
+          createUserInfo(this.temp).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -233,8 +246,6 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.demoMethod()
-      return;
       this.temp = Object.assign({}, row) // copy obj
       this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
@@ -308,31 +319,14 @@ export default {
         : sort === `-${key}`
           ? 'descending'
           : ''
-    },
-    demoMethod: function() {
-      this.$notify({
-        title: 'Nofity',
-        message: 'Nofity: 请稍后',
-        type: 'success',
-        duration: 2000
-      })
     }
   }
 }
 </script>
 <style lang="css">
-  /*/deep/ .pagination-container {*/
-  /*  margin-top: 0px;*/
-  /*}*/
-  .yangshi {
-    margin-top: 0px;
+  .paginationStyle {
+    margin-top: -1px;
   }
 
 </style>
 
-<!--<styel scoped lang="stylus" rel="stylesheet/stylus">-->
-<!--  /deep/ .pagination-container-->
-<!--    margin-top 0px-->
-<!--  .yangshi-->
-<!--    margin: 0px-->
-<!--</styel>-->
